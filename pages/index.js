@@ -3,11 +3,15 @@ import { MainLayout } from "../components/ui/layout";
 import { useWeb3 } from "../components/ui/provider";
 
 export default function Home() {
-  const { isLoading, provider, ethereum } = useWeb3();
+  const { contract } = useWeb3();
+  console.log(contract);
 
-  console.log("provider", provider);
-  console.log("ethereum", ethereum);
-  console.log("isLoading", isLoading);
+  const getInfoNFT = async () => {
+    console.log(await contract?.name());
+    console.log(await contract?.symbol());
+  };
+
+  getInfoNFT();
 
   return (
     <>
