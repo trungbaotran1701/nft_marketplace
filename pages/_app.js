@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import { EmtyLayout } from "../components/ui/layout";
-import Web3Provider from "../components/ui/provider/web3";
+import { Web3Provider } from "../components/provider";
 // const Noop = ({ children }) => <>{children}</>;
 
 function MyApp({ Component, pageProps }) {

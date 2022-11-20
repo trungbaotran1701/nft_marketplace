@@ -1,17 +1,10 @@
 import Link from "next/link";
 import { MainLayout } from "../components/ui/layout";
-import { useWeb3 } from "../components/ui/provider";
+import { useAccount } from "../components/hooks/web3";
 
 export default function Home() {
-  const { contract } = useWeb3();
-  console.log(contract);
-
-  const getInfoNFT = async () => {
-    console.log(await contract?.name());
-    console.log(await contract?.symbol());
-  };
-
-  getInfoNFT();
+  const { account } = useAccount();
+  console.log("account data:", account.data);
 
   return (
     <>
