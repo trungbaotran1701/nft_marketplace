@@ -10,8 +10,7 @@ export default function Web3Provider({ children }) {
     ethereum: null,
     provider: null,
     contract: null,
-    isLoading: true,
-    hooks: setupHooks({}),
+    hooks: setupHooks({ isLoading: false }),
   });
 
   useEffect(() => {
@@ -24,12 +23,14 @@ export default function Web3Provider({ children }) {
           ethereum,
           provider,
           contract,
-          isLoading: false,
-          hooks: setupHooks({ ethereum, provider, contract }),
+          hooks: setupHooks({ ethereum, provider, contract, isLoading: false }),
         });
       } catch (err) {
         console.error("Please! Install Metamask");
-        setWeb3api((abi) => ({ ...abi, isLoading: false }));
+        setWeb3api((abi) => ({
+          ...abi,
+          hooks: setupHooks({ isLoading: false }),
+        }));
       }
     };
     loadProvider();
