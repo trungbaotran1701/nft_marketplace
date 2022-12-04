@@ -9,12 +9,21 @@ contract NftMarket is ERC721URIStorage {
 
     Counters.Counter private _listedItems;
     Counters.Counter private _tokenIds;
-
-    mapping(string => bool) private _existsTokenURI;
-
     constructor() ERC721("TrungChanNFT", "TCNFT") {}
 
-    function mintToken(string memory tokenURI) public payable returns (uint256) {
+    mapping(string => bool) private _existsTokenURI;
+    mapping(uint256 => NftItem) private _idToNftItem;
+
+    struct NftItem {
+        uint256 tokenId;
+        uint256 price;
+        address owner;
+    }
+
+    event NftItemCreate(uint256 tokenId, uint256 price, address owner);
+
+
+    function mintToken(string memory tokenURI, uint256 price) public payable returns (uint256) {
         require(!checkTokenURIs(tokenURI), 'TokenURI has been existed');
         _listedItems.increment();
         _tokenIds.increment();
@@ -23,6 +32,7 @@ contract NftMarket is ERC721URIStorage {
 
         _safeMint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, tokenURI);
+        _NftItemCreated(newTokenId, price);
         _existsTokenURI[tokenURI] = true;
 
         return newTokenId;
@@ -30,6 +40,21 @@ contract NftMarket is ERC721URIStorage {
 
     function checkTokenURIs(string memory tokenURI) public view returns (bool) {
         return _existsTokenURI[tokenURI] == true;
+    }
+
+    function getInfoNft(uint256 tokenId) public view returns (NftItem memory) {
+        return _idToNftItem[tokenId];
+    }
+
+    function listedNftItem() public view returns (uint) {
+        return _listedItems.current();
+    }
+
+    function _NftItemCreated(uint tokenId, uint price) private {
+        require(price >= 0, "Price must be at least 1 wei");
+
+        _idToNftItem[tokenId] = NftItem(tokenId, price, msg.sender);
+        emit NftItemCreate(tokenId, price, msg.sender);
     }
 
 }
